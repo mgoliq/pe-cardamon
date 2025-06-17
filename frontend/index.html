@@ -3,42 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple API Caller</title>
+    <title>Wroclaw Public Transport Finder</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Simple API Caller</h1>
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-6xl flex flex-col">
+    <div class="flex flex-row w-full">
+        <div class="w-1/3 bg-gray-50 p-6 rounded-lg shadow-lg flex flex-col">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Plan Route</h2>
 
-    <div class="mb-6">
-        <label for="api-endpoint-selector" class="block text-gray-700 text-sm font-bold mb-2">Select API Endpoint:</label>
-        <select id="api-endpoint-selector"
-                class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-            <option value="http://localhost:5001/public_transport/city/wroclaw/closest_departures">Closest Departures (Wroclaw)</option>
-            <option value="http://localhost:5001/public_transport/city/wroclaw/trip/3_14613060">Trip Details (Trip ID: 3_14613060)</option>
-        </select>
-        <p class="text-xs text-gray-500 mt-1">
-            Choose an API endpoint to call.
-        </p>
+            <div class="mb-6">
+                <label for="start-point" class="block text-gray-700 text-sm font-bold mb-2">Start Point</label>
+                <input id="start-point" type="text"
+                       class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="Click on the map to select start point" readonly>
+            </div>
+
+            <div class="mb-6">
+                <label for="destination-point" class="block text-gray-700 text-sm font-bold mb-2">Destination Point</label>
+                <input id="destination-point" type="text"
+                       class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="Click on the map to select destination point" readonly>
+            </div>
+
+            <div class="mb-6">
+                <label for="departure-time" class="block text-gray-700 text-sm font-bold mb-2">Departure/Arrival Time</label>
+                <input id="departure-time" type="datetime-local"
+                       class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+
+            <div class="mb-6">
+                <label for="limit" class="block text-gray-700 text-sm font-bold mb-2">Max stops</label>
+                <input id="limit" type="number"
+                       class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="Enter max stops">
+            </div>
+
+            <button id="call-api-btn"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out transform hover:scale-105">
+                Find Routes
+            </button>
+
+            <div id="status-message" class="mt-4 text-center text-sm text-gray-600"></div>
+        </div>
+
+        <div class="w-2/3 flex flex-col pl-6">
+            <div id="map" class="h-96 rounded-lg shadow-lg"></div>
+        </div>
     </div>
 
-    <button id="call-api-btn"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out transform hover:scale-105">
-        Call API
-    </button>
-
-    <div id="status-message" class="mt-4 text-center text-sm text-gray-600"></div>
-
-    <div class="mt-6">
-        <label for="json-output" class="block text-gray-700 text-sm font-bold mb-2">API Response (JSON):</label>
-        <textarea id="json-output"
-                  class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 font-mono text-sm"
-                  readonly
-                  placeholder="API response will appear here..."></textarea>
+    <div class="mt-8 w-full">
+        <label for="results" class="block text-gray-700 text-sm font-bold mb-2">Results:</label>
+        <div id="results"
+             class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 font-mono text-sm overflow-y-auto">
+        </div>
     </div>
 </div>
 
-<script src="script.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
